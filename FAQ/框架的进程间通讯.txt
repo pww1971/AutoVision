@@ -1,0 +1,17 @@
+
+一、在配置2中设置服务器ip 
+PUBSERVER_IP = 192.168.0.31
+
+二、写代码在各个设备模块中
+//模块1的发送 非c++ 记得socket加长度的包头发送
+S_SubscribeMsg msg;
+msg.szModelType = "DbRawPic";//模块类型
+msg.szMsgType = "WritePic";//消息类型
+AnsiString szPos = DBGrid3->DataSource->DataSet->FieldByName("position")->AsString;
+msg.szMsgCont = szPos.c_str();//消息内容
+sendMsg( msg);
+
+//模块2的注册订阅 参考dev2devCom_device 和ngsort_device
+class treatDbPic :public CSubscribeClient
+重写解析函数 收到模块1发来的消息做对应的处理
+virtual bool connectionAnalyse(TcpMsg* pTcpMsg)

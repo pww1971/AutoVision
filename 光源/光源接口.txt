@@ -1,0 +1,22 @@
+
+光源系统采用多个光源 每个光源多个光照方案的接口方式 光照方案的编码格式"S100T100F100T100TC#"
+换光源，直接修改RAY.cpp90行和121行的sendData和closeDay两个函数
+
+//关闭编号id的光源
+extern "C" PROCLIB_API bool RayDllcloseRay( int id);
+//打开编号id的光源 采用光照方案st
+extern "C" PROCLIB_API bool RayDllopenRay(string st,int id);
+//保存光源系统到配置文件
+extern "C" PROCLIB_API void RayDllWriteFile(string cfgfile);
+//读配置文件到光源系统
+extern "C" PROCLIB_API bool RayDLLLoadFile(string cfgfile);
+//动态库的资源释放
+extern "C" PROCLIB_API void RayDllRelease();
+//打开光源设置的对话框 输入配置文件路径
+extern "C" PROCLIB_API bool RayDLLIni(string cfgfile);
+//获取编号id的光源的默认光照方案
+extern "C" PROCLIB_API string RayDLLgetDefault(int id);
+//设置编号id的光源的默认光照方案
+extern "C" PROCLIB_API void RayDLLsetDefault(string st,int id);
+//获取光源数
+extern "C" PROCLIB_API int RayDLLgetRayNum();

@@ -1,0 +1,3 @@
+取消勾选 BUILD_opencv_world
+取消勾选 BUILD_opencv_cvv
+二者选其一

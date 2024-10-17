@@ -1,0 +1,93 @@
+void testQR()
+{
+	cv::Mat img = cv::imread("C:\\Program Files (x86)\\ZBar\\examples\\barcode.png");
+	if (img.empty())
+	{
+		cout << "请确认图像文件名称是否正确" << endl;
+		return ;
+	}
+	cv::Mat gray, qrcode_bin;
+	cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+	cv::QRCodeDetector qrcodedetector;
+	vector<cv::Point> points;
+	string information;
+	bool isQRcode;
+	isQRcode = qrcodedetector.detect(gray, points);  //识别二维码
+	if (isQRcode)
+	{
+		//解码二维码
+		information = qrcodedetector.decode(gray, points, qrcode_bin);
+		cout << points << endl;  //输出二维码四个顶点的坐标
+	}
+	else
+	{
+		cout << "无法识别二维码，请确认图像时候含有二维码" << endl;
+		return;
+	}
+	//绘制二维码的边框
+	for (int i = 0; i < points.size(); i++)
+	{
+		if (i == points.size() - 1)
+		{
+			cv::line(img, points[i], points[0], cv::Scalar(0, 0, 255), 2, 8);
+			break;
+		}
+		cv::line(img, points[i], points[i + 1], cv::Scalar(0, 0, 255), 2, 8);
+	}
+	//将解码内容输出到图片上
+	cv::putText(img, information.c_str(), cv::Point(20, 30), 0, 1.0, cv::Scalar(0, 0, 255), 2, 8);
+
+	//利用函数直接定位二维码并解码
+	string information2;
+	vector<cv::Point> points2;
+	information2 = qrcodedetector.detectAndDecode(gray, points2);
+	cout << points2 << endl;
+	cv::putText(img, information2.c_str(), cv::Point(20, 55), 0, 1.0, cv::Scalar(0, 0, 0), 2, 8);
+
+	//输出结果
+	cv::imshow("result", img);
+	cv::namedWindow("qrcode_bin", cv::WINDOW_NORMAL);
+	cv::imshow("qrcode_bin", qrcode_bin);
+	cv::waitKey(0);
+	
+}
+#include "../../ZBar/include/zbar.h"
+using namespace zbar;
+#pragma comment(lib, "libzbar64-0.lib")
+void testzbar()
+{
+	// create a reader
+	ImageScanner scanner;
+	// configure the reader
+	scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
+
+	// obtain image data
+	cv::Mat img = cv::imread("C:\\Program Files (x86)\\ZBar\\examples\\barcode.png");
+	if (img.empty())
+	{
+		cout << "请确认图像文件名称是否正确" << endl;
+		return;
+	}
+	int width = img.cols;   // extract dimensions
+	int height = img.rows;
+	cv::Mat gray;
+	cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+
+	// wrap image data
+	Image image(width, height, "Y800", gray.data, width * height);//Y800就是灰度图
+
+	// scan the image for barcodes
+	int n = scanner.scan(image);
+
+	// extract results
+	for (Image::SymbolIterator symbol = image.symbol_begin();
+		symbol != image.symbol_end();
+		++symbol) {
+		// do something useful with results
+		cout << "decoded " << symbol->get_type_name()
+			<< " symbol \"" << symbol->get_data() << '"' << endl;
+	}
+
+	// clean up
+	image.set_data(NULL, 0);
+}

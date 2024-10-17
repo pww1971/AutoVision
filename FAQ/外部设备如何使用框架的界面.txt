@@ -1,0 +1,3 @@
+3dPos_device.cpp 244行
+直接调用制程的界面
+mb->m_pCheck->viewWin(procid, msg.vm);//使用制程的界面 因此需要保证制程表有空制程或与制程共画面

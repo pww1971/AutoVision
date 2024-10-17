@@ -1,0 +1,42 @@
+1\线 通用 参考网：http://www.skcircle.com/?id=800
+Sigma表示高斯滤波的参数，高斯滤波的是对Profile形成的曲线
+
+Threshold是对他的一阶导数设置的阈值。这个理解比较不容易，可以暂时理解为你选取的幅度阈值下限。
+另有一种可信的官方说法是：提取边缘轮廓的最小梯度幅度
+至于threshold来说，用起来容易理解。
+如果边缘与背景越难区分，其值要越小。反之，其值需要越大。
+
+
+Transition=‘positive’  代表找寻所有正边缘 ：所谓正边缘即为在查找方向上从黑到白过渡变化的边缘；
+Transition=‘negative’  代表找寻所有负边缘 ：所谓负边缘即为在查找方向上从白到黑过渡变化的边缘；
+Transition=‘all’  代表找寻所有边缘 ;
+
+Select设置
+可以选择哪些边对被返回。如果选择设置为“All”，则返回所有边对。如果设置为“first”，则只有第一个提取的边对被返回，如果设置为“last”，只返回最后一个
+
+2\圆 椭圆
+Direct 边缘搜索方向类型: inner 搜索方向由圆外指向圆心, outer 搜索方向由圆心指向圆外
+Elements 结果数
+Fit_Min_Points_Num 最小有效边缘点数
+
+3、宽度 
+参考网：https://blog.csdn.net/coolbee19990/article/details/68921446?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase
+
+边缘分组成对：如果Transition =“positive”，则返回的点（RowEdgeFirst，ColumnEdgeFirst）为矩形长轴方向上由黑到亮的边缘点，点（RowEdgeSecond，ColumnEdgeSecond）为由亮至暗的边缘点。如果Transition =“negative”，则相反
+如果Transition ='all'，则第一个检测到的边缘定义RowEdgeFirst和ColumnEdgeFirst的转换。这适合于测量具有相对于背景的不同亮度的物体
+
+Interpolation = 'nearest_neighbor'，测量中的灰度值是从最接近的像素的灰度值，即通过常数插值获得的。 对于Interpolation = 'bilinear'，使用双线性插值，而对于Interpolation = 'bicubic'，则使用双三次插值。
+
+IntraDistance 边缘对内边缘之间的距离。
+InterDistance 连续边缘对之间的距离。
+提取的边缘作为位于矩形长轴上的单个点返回。相应的边沿幅度的值为AmplitudeFirst和AmplitudeSecond。此外，每个边对之间的距离以IntraDanceance返回，并且InterDistance之间返回连续边源对之间的距离。这里，IntraDistance [i]对应于EdgeFirst [i]和EdgeSecond [i]之间的距离，而InterDistance [i]对应于EdgeSecond [i]和EdgeFirst [i + 1]之间的距离
+只有边缘是直线并且边缘垂直于长轴的假设被满足了，measure_pairs返回的结果才有意义。此外，Sigma不能大于约 0.5*Length1
+
+4\顶点
+
+DetectWidth  设置顶点的宽度
+
+5、角度
+rad 弧度
+交点的行列 row和col
+Points 没意义

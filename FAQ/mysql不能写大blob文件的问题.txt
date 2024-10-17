@@ -1,0 +1,6 @@
+1、打开 C:\ProgramData\MySQL\MySQL Server 8.0\my.ini 
+2、修改这个文件
+# The maximum size of one packet or any generated or intermediate string, or any parameter sent by the
+# mysql_stmt_send_long_data() C API function.
+max_allowed_packet=400M 改4到400
+3、我的电脑 -->管理-->服务-->重新启动MYSQL服务

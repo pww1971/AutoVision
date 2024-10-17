@@ -1,0 +1,10 @@
+sudo dnf install kf5-kwindowsystem-devel
+
+需要进入x11图形界面模式
+init 5
+
+在demoCtrlcpp的726行scaleView();的显示线程里cv::waitKey(1);里面死锁了  怀疑是x11图形界面没有在opencv里面编译的问题  但是test控制台又没有问题。
+
+原因：使用qt界面  必须使用with Qt来编译生成opencv库
+因此：无qt的必须使用不带qt的opencv库  否则也会死锁
+

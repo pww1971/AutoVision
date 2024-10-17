@@ -1,0 +1,11 @@
+Design_GUI_checkPatch 杂项目 纹理分析感觉实用性不好
+halcon_texture_checkPatch  halcon的gmm纹理分析训练和检测
+halcon_3dMeasure_checkPatch 3d检测模块  包括平面度 平面高度 平面夹角 切面等等功能
+halcon_Dlg_GUI_checkPatch  2d的尺寸测量模块 
+halcon_Dlg_GUI_checkPatch - dxf  支持dxf导入自动形成测量项目的 尺寸测量模块
+halcon_GUI_checkPatch 二维码 一维码检测
+ppocr_GUI_checkPatch 百度的字符识别  debug无法用 百度飞桨的库只能生成release库
+QRCode_GUI_checkPatch 微信二维码识别
+Monocular_Rang_checkPatch 单目测距 包含pww对话框和处理的封装
+halcon_anomalies_checkPatch 深度学习异常检测
+logPolar_checkPatch 对数极坐标和线性极坐标把园环展平

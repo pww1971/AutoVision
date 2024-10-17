@@ -1,0 +1,9 @@
+1、使用halcon12以上版本需要住调用的exe中初始化halcon 否则dll中使用halcon函数死锁。
+#include <HalconCpp.h>
+using namespace HalconCpp;
+SetSystem("use_window_thread", "true");任意调用一个halcon函数
+
+2、换版本 src/halcon目录下的拷贝对应halcon版本include和lib 
+23的版本的exe halcon初始化里添加HalconCpp::SetHcppInterfaceStringEncodingIsUtf8(false);代码
+
+

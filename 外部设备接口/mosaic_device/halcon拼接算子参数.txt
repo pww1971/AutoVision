@@ -1,0 +1,116 @@
+二、拼接算子 
+1.proj_match_points_ransac(Image1, Image2 : : Rows1, Cols1, Rows2,Cols2, GrayMatchMethod, MaskSize, RowMove,ColMove, RowTolerance,ColTolerance, Rotation,MatchThreshold, EstimationMethod, DistanceThreshold, RandSeed :HomMat2D, Points1, Points2)
+说明：通过点对匹配（点与点之间对应关系），计算两个图像之间的投影变换矩阵
+参数简介：
+
+image1(in)：输入图像1（可以输入图像对）
+
+image2(in)：输入图像2（可以输入图像对）
+
+Rows1 (input_control)：图1特征点的行坐标。（Image1特征点的行列坐标）
+
+Cols1 (input_control)：图1特征点的列坐标。
+
+Rows2 (input_control)：图2特征点行坐标（Image2特征点的行列坐标）
+
+Cols2 (input_control)：图2特征点的列坐标。
+
+GrayMatchMethod (input_control) ：灰度值比较度量。（‘ssd’，则使用灰度值差的平方和，‘sad’表示绝对差的和，‘ncc’表示归一化的互相关。）
+MaskSize (input_control) ：灰度掩膜尺寸。（将图片分为很多小格子，在小格子内进行匹配）
+
+RowMove (input_control)：平均行坐标移位。
+
+ColMove (input_control) ：平均列坐标偏移。
+
+RowTolerance (input_control)：匹配搜索窗口的半高。
+
+ColTolerance (input_control) ：匹配搜索窗口的半宽。
+
+Rotation(input_control) ：旋转角度范围。
+
+MatchThreshold (input_control) ：灰度值匹配阈值。（只有当度量值低于 MatchThreshold( 匹配阈值） (‘ssd’，‘sad’)或高于 MatchThreshold (‘ncc’)时，才接受找到的匹配。）
+
+EstimationMethod (input_control)：变换矩阵估计算法。
+DistanceThreshold (input_control)：转换一致性检查的阈值。
+
+RandSeed (input_control) ：为随机数生成器生成种子。
+
+HomMat2D (out) ：齐次射影变换矩阵。
+
+Points1 (out) ：图1中匹配输入点的索引。
+
+Points2 (out) ：图2中匹配输入点的索引。
+
+2.gen_projective_mosaic(Images : MosaicImage : StartImage, MappingSource, MappingDest, HomMatrices2D,StackingOrder, TransformDomain: MosaicMatrices2D)
+说明：将多个图像通过射影变换拼接。
+参数简介：
+
+Images (input)：输入图像。（要将连接的图像使用concat_obj连接在一起）
+
+MosaicImage (output)：输出图像。
+
+StartImage (input)：中心输入图像的索引。（选择第几副图像作为参考，一般选择中间的图像）注：给的是序号
+
+MappingSource (input)：变换的源像的下标。（将图像按顺序排列，取前n-1项）如：[1,2,3]
+
+MappingDest (input)：变换的目标像的下标。（将图像按顺序排列，取后n-1项）如：[2,3,4]
+
+HomMatrices2D (input)：3x3个射影变换矩阵的数组。（变换矩阵通常由proj_match_points_ransac确定）
+
+StackingOrder (input)：mosaic中图像的堆叠顺序（如果给出的是“default”而不是一个整数数组，则将使用规范顺序(图像按照图像中使用的顺序)。）
+TransformDomain：(input)（如果TransformDomain设置为“false”，则忽略输入图像的域，并对完整图像进行转换。）
+MosaicMatrices2D (output) ：（包含一组3x3的投影变换矩阵，用于描述图像中的每个图像到其在拼接中的位置的映射）
+
+3.bundle_adjust_mosaic( : : NumImages, ReferenceImage, MappingSource, MappingDest, HomMatrices2D, Rows1, Cols1,Rows2, Cols2, NumCorrespondences,Transformation : MosaicMatrices2D, Rows, Cols, Error)
+说明：调整图像拼接。
+参数简介：
+
+NumImages(input_control)：拼接图像的数量
+
+ReferenceImage(input_control)：参考图像
+
+MappingSource(input_control)：图像对的索引如：[1,2,3]
+
+MappingDest(input_control)：图像对的索引如：[1,2,3]
+
+HomMatrices2D(input_control)：3×3 齐次射影变换矩阵。
+
+Rows1(input_control)：匹配成功的坐标点（通过索引Points来取）如：Rows1[Points1]
+
+Cols1(input_control)：匹配成功的坐标点（通过索引Points来取）
+
+Rows2(input_control)：匹配成功的坐标点（通过索引Points来取）
+
+Cols2(input_control)：匹配成功的坐标点（通过索引Points来取）
+
+NumCorrespondences(input_control)：匹配对应的点对数目（一个元组，各个图像对之间的匹配数）
+
+Transformation(input_control)： 要使用的转换类型（对于转换= ' projective '，使用投射转换(参见vector_to_proj_hom_mat2d)；
+
+                                                                                         对于转换= ' affine '，使用仿射变换(参见vector_to_hom_mat2d)；
+
+                                                                                         对于转换= ' similarity '，相似性变换(参见vector_to_similarity)；
+
+                                                                                          以及对于转换= ‘rigid'刚性变换(参见vector_to_ girid)。）
+
+MosaicMatrices2D(output) ：由3*3投影变换矩阵组成的数组，用于确定图像在拼接中的位置。
+
+Rows(output) ：通过束调整重构的点的行坐标。
+
+Cols(output) ：通过束调整重构的点的列坐标。
+
+Error(output) ：每个重建点的平均误差。
+
+4.gen_bundle_adjusted_mosaic(Images : MosaicImage : HomMatrices2D, StackingOrder, TransformDomain : TransMat2D)
+说明：生成束调整的拼接图像
+参数简介：
+
+Images(input) :图像组
+MosaicImage(output) : 调整后的拼接图像
+HomMatrices2D(input)：调整后的变换矩阵
+StackingOrder （ input ） ：在拼接图像的堆叠顺序 一般default
+TransformDomain (input):图像的定义域是否自适应，一般false
+TransMat2D(out):描述将所有图像完全转换为输出图像所必需的平移的3x3投影变换矩阵
+————————————————
+版权声明：本文为CSDN博主「被雨打湿的杜甫」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/weixin_51554865/article/details/125826615

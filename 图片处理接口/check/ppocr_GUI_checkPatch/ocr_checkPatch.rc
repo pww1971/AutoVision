@@ -1,0 +1,153 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 463, 224
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOPMOST
+CAPTION "OCR参数"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,149,7,50,14
+    PUSHBUTTON      "取消",IDCANCEL,203,7,50,14
+    EDITTEXT        IDC_EDIT_db_thresh,52,106,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_Cls,15,69,176,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_db_box_thresh,150,106,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_Det,15,35,176,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_Rec,15,52,176,14,ES_AUTOHSCROLL
+    CONTROL         "是否使用多边形框计算",IDC_CHECK_polygon,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,10,102,10
+    CONTROL         "是否使用方向分类器",IDC_CHECK_angle,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,22,93,10
+    EDITTEXT        IDC_EDIT1,15,122,176,75,ES_MULTILINE | ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL
+    PUSHBUTTON      "识别",IDC_BUTTON1,201,122,29,14
+    PUSHBUTTON      "检测定位模型",IDC_BT_DET,201,35,55,15
+    PUSHBUTTON      "识别模型",IDC_BT_REC,201,52,55,15
+    PUSHBUTTON      "方向分类模型",IDC_BT_CLS,201,69,55,15
+    COMBOBOX        IDC_COMBO1,200,106,55,122,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "db_thresh",IDC_STATIC,15,109,34,8
+    LTEXT           "db_box_thresh",IDC_STATIC,98,109,49,8
+    EDITTEXT        IDC_EDIT2,75,201,116,14,ES_AUTOHSCROLL
+    LTEXT           "正则化表达式",IDC_STATIC,15,204,52,8
+    EDITTEXT        IDC_EDIT_Dict,15,87,176,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "字典路径",IDC_BT_Dict,201,87,55,15
+    PUSHBUTTON      "旋转",IDC_BUTTON2,265,193,29,14
+    EDITTEXT        IDC_EDIT3,289,173,40,14,ES_AUTOHSCROLL
+    LTEXT           "角度",IDC_STATIC,266,178,18,8
+    CONTROL         "",IDC_STATIC_PIC,"Static",SS_BLACKFRAME,265,1,197,166
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 456
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 217
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG1 DLGINIT
+BEGIN
+    IDC_COMBO1, 0x403, 13, 0
+0xecbc, 0xe2b2, 0xd6b7, 0xe0c0, 0xb6ca, 0xf0b1, "\000" 
+    IDC_COMBO1, 0x403, 9, 0
+0xecbc, 0xe2b2, 0xb6ca, 0xf0b1, "\000" 
+    IDC_COMBO1, 0x403, 5, 0
+0xecbc, 0xe2b2, "\000" 
+    IDC_COMBO1, 0x403, 9, 0
+0xd6b7, 0xe0c0, 0xb6ca, 0xf0b1, "\000" 
+    IDC_COMBO1, 0x403, 5, 0
+0xb6ca, 0xf0b1, "\000" 
+    IDC_COMBO1, 0x403, 5, 0
+0xd6b7, 0xe0c0, "\000" 
+    0
+END
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

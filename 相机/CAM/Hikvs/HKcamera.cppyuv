@@ -1,0 +1,363 @@
+
+
+
+#include "HKcamera.h"
+
+
+CHKCamera::CHKCamera()
+{
+	m_id=-1;
+}
+CHKCamera::~CHKCamera()
+{
+	release();
+}
+
+//相机抓图
+int CHKCamera::grapImage(cv::Mat& m)
+{
+	m_Lock.lock();
+	int nRet = MV_CC_GetOneFrameTimeout(handle, pBufForDriver, nBufSizeForDriver, &stImageInfo, 1000);
+	if (nRet == MV_OK)
+	{
+		if (PixelType_Gvsp_Mono8 != stImageInfo.enPixelType && PixelType_Gvsp_RGB8_Packed != stImageInfo.enPixelType)
+		{
+			m_Lock.unLock();
+			printf("pic type error!\n");
+			return -1;
+		}
+		printf("Width[%d],Height[%d],FrameNum[%d]\r\n", stImageInfo.nWidth, stImageInfo.nHeight, stImageInfo.nFrameNum);
+		int channels = 1;
+		if (PixelType_Gvsp_Mono8 != stImageInfo.enPixelType)
+		{
+			channels = 3;
+		}
+		// 仅在第一次保存图像时申请缓存
+		if (-1 == nBufSizeForSaveImage)
+		{
+			// BMP图片大小：width * height * 3 + 2048(预留BMP头大小)
+			nBufSizeForSaveImage = stImageInfo.nWidth * stImageInfo.nHeight *channels + 2048;
+		}
+		if (3 == channels)
+		{
+			m = cv::Mat(stImageInfo.nHeight, stImageInfo.nWidth, CV_8UC3, pBufForDriver);//CV_16UC3
+			if (!isColor)
+				cv::cvtColor(m, m, CV_RGB2GRAY);
+			else
+				cv::cvtColor(m, m, CV_RGB2YUV); //CV_RGB2YUV  CV_RGB2BGR
+		}
+		else
+		{
+			m = cv::Mat(stImageInfo.nHeight, stImageInfo.nWidth, CV_8UC1, pBufForDriver);//CV_16UC1
+			if (isColor)
+			{
+				cv::cvtColor(m, m, CV_GRAY2BGR);
+				cv::cvtColor(m, m, CV_BGR2YUV);
+			}
+		}
+	}
+	else
+	{
+		m_Lock.unLock();
+		printf("No Data!\n");
+		return -1;
+	}
+	m_Lock.unLock();
+	return 1;
+}
+int CHKCamera::grapImage(CoordinatePosXYZ& cor,S_Msg*& pMsg)
+{
+	m_Lock.lock();
+	int nRet = MV_CC_GetOneFrameTimeout(handle, pBufForDriver, nBufSizeForDriver, &stImageInfo, 1000);
+	if (nRet == MV_OK)
+	{
+		// 设置对应的相机参数
+		//unsigned char* pImage = (unsigned char*)malloc(60*1024*1024);
+		//MV_SAVE_IMAGE_PARAM_EX stParam = { 0 };
+		//stParam.enImageType = MV_Image_Jpeg; // 需要保存的图像类型
+		//stParam.enPixelType = stImageInfo.enPixelType;  // 相机对应的像素格式
+		//stParam.nWidth = stImageInfo.nWidth;         // 相机对应的宽
+		//stParam.nHeight = stImageInfo.nHeight;          // 相机对应的高
+		//stParam.nDataLen = stImageInfo.nFrameLen;
+		//stParam.pData = pBufForDriver;
+		//stParam.pImageBuffer = pImage;
+		//stParam.nBufferSize = nBufSizeForSaveImage;  // 存储节点的大小
+		//stParam.nJpgQuality = 80;       // jpg编码，仅在保存Jpg图像时有效。保存BMP时SDK内忽略该参数
+
+		//nRet = MV_CC_SaveImageEx(&stParam);
+		//if (MV_OK != nRet)
+		//{
+		//	//m_bRetStatus = STATUS_ERROR;
+		//	;
+		//}
+		//char pImageName[32] = {0};
+  //          sprintf_s(pImageName, 20, "%03d.bmp", stImageInfo.nFrameNum);
+  //          FILE* fp = fopen(pImageName, "wb");
+  //          fwrite(pImage, 1, stParam.nImageLen, fp);
+  //          fclose(fp);
+		//	free(pImage);
+		if (PixelType_Gvsp_Mono8 != stImageInfo.enPixelType && PixelType_Gvsp_RGB8_Packed != stImageInfo.enPixelType)
+		{
+			m_Lock.lock();
+			printf("pic type error!\n");
+			return -1;
+		}
+		printf("Width[%d],Height[%d],FrameNum[%d]\r\n", stImageInfo.nWidth, stImageInfo.nHeight, stImageInfo.nFrameNum);
+		int channels = 1;
+		if (PixelType_Gvsp_Mono8 != stImageInfo.enPixelType)
+		{
+			channels = 3;
+		}
+		// 仅在第一次保存图像时申请缓存
+		if (-1 == nBufSizeForSaveImage)
+		{
+			// BMP图片大小：width * height * 3 + 2048(预留BMP头大小)
+			nBufSizeForSaveImage = stImageInfo.nWidth * stImageInfo.nHeight *channels + 2048;
+		}
+		pMsg = new S_Msg;
+		if (channels == 3)
+		{
+			pMsg->pic = cv::Mat(stImageInfo.nHeight, stImageInfo.nWidth, CV_8UC3, pBufForDriver);//CV_16UC3
+			if (!isColor)
+				cv::cvtColor(pMsg->pic, pMsg->pic, CV_RGB2GRAY);
+			else
+				cv::cvtColor(pMsg->pic, pMsg->pic, CV_RGB2YUV); //CV_RGB2YUV  CV_RGB2BGR
+		}
+		else
+		{
+			pMsg->pic = cv::Mat(stImageInfo.nHeight, stImageInfo.nWidth, CV_8UC1, pBufForDriver);//CV_16UC1
+			if (isColor)
+			{
+				cv::cvtColor(pMsg->pic, pMsg->pic, CV_GRAY2BGR);
+				cv::cvtColor(pMsg->pic, pMsg->pic, CV_BGR2YUV);
+			}
+		}
+		pMsg->ret = cor;
+		pMsg->ret.x = -1;
+		pMsg->ret.y = -1;
+		/*char pImageName[32] = {0};
+		           sprintf_s(pImageName, 20, "%03d.bmp", stImageInfo.nFrameNum);
+           cv::imwrite(pImageName,pMsg->pic);*/
+		
+	}
+	else
+	{
+		m_Lock.lock();
+		printf("No Data!\n");
+		return -1;
+	}
+	m_Lock.unLock();
+	return 1;
+}
+
+/*相机驱动初始化，
+参数：nIndex设备标记 
+返回值：-1 错误，0 正常
+*/
+int CHKCamera::ini(unsigned int nIndex )
+{
+	release();
+	int nRet = MV_OK;
+
+	handle = NULL;
+
+	MV_CC_DEVICE_INFO_LIST stDeviceList;
+	memset(&stDeviceList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
+
+	// 1. 枚举设备
+	nRet = MV_CC_EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, &stDeviceList);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_EnumDevices fail! nRet [%x]\n", nRet);
+		return -1;
+	}
+
+	if (stDeviceList.nDeviceNum > nIndex)
+	{
+		/*for (int i = 0; i < stDeviceList.nDeviceNum; i++)
+		{
+		printf("[device %d]:\n", i);
+		MV_CC_DEVICE_INFO* pDeviceInfo = stDeviceList.pDeviceInfo[i];
+		if (NULL == pDeviceInfo)
+		{
+		break;
+		}
+		PrintDeviceInfo(pDeviceInfo);
+		}*/
+	}
+	else
+	{
+		printf("Find No GIGE Devices!\n");
+		return -1;
+	}
+
+	// 2. 选择设备并创建句柄
+	nRet = MV_CC_CreateHandle(&handle, stDeviceList.pDeviceInfo[nIndex]);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_CreateHandle fail! nRet [%x]\n", nRet);
+		return -1;
+	}
+
+	// 3.打开设备
+	nRet = MV_CC_OpenDevice(handle);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_OpenDevice fail! nRet [%x]\n", nRet);
+		return -1;
+	}
+
+	// 4. 设置参数
+	// open触发
+	/*nRet = MV_CC_SetEnumValue(handle, "TriggerMode", MV_TRIGGER_MODE_OFF);
+	if (MV_OK != nRet)
+	{
+		printf("Set TriggerMode failed[%x]!\n", nRet);
+		return -1;
+	}*/
+	// 4.3设置触发源
+	//0:Line0 1:Line1 2:Line2 3.Line3 4:Counter0 7:Software 8:FrequencyConverter
+	/*nRet = MV_CC_SetEnumValue(handle, "TriggerSource", 7);
+	if (MV_OK != nRet)
+	{
+		printf("Set TriggerSource failed[%x]!\n", nRet);
+		return -1;
+	}*/
+	// 使用连续模式
+	/*nRet = MV_CC_SetEnumValue(handle, "AcquisitionMode", MV_ACQ_MODE_CONTINUOUS);
+	if (MV_OK != nRet)
+	{
+		printf("Set AcquisitionMode failed[%x]!\n", nRet);
+		return -1;
+	}*/
+
+	// 5.开始抓图
+	nRet = MV_CC_StartGrabbing(handle);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_StartGrabbing fail! nRet [%x]\n", nRet);
+		return -1;
+	}
+	//5.1触发延时
+	//nRet = MV_CC_SetFloatValue(handle, "TriggerDelay", 200);
+	//if (MV_OK != nRet)
+	//{
+	//	printf("error: TriggerDelay fail [%x]\n", nRet);
+	//	return -1;
+	//}
+
+	////5.2软触发采图一张
+	//nRet = MV_CC_SetCommandValue(handle, "TriggerSoftware");
+	//if (MV_OK != nRet)
+	//{
+	//	printf("error: TriggerSoftware fail [%x]\n", nRet);
+	//	return -1;
+	//}
+	// 6.获取图
+	MVCC_INTVALUE stIntvalue = { 0 };
+	nRet = MV_CC_GetIntValue(handle, "PayloadSize", &stIntvalue);
+	if (nRet != MV_OK)
+	{
+		printf("Get PayloadSize failed! nRet [%x]\n", nRet);
+		return -1;
+	}
+
+	nBufSizeForDriver = stIntvalue.nCurValue + 2048;  // 一帧数据大小 + 预留2048byte用于SDK内部处理
+	pBufForDriver = (unsigned char *)malloc(nBufSizeForDriver);
+
+	memset(&stImageInfo, 0, sizeof(MV_FRAME_OUT_INFO_EX));
+	nBufSizeForSaveImage = -1;
+	m_id = nIndex;
+	return nRet;
+}
+
+//释放相机驱动
+void CHKCamera::release()
+{
+	m_id = -1;
+	// 7.结束抓图
+	int nRet = MV_OK;
+	nRet = MV_CC_StopGrabbing(handle);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_StopGrabbing fail! nRet [%x]\n", nRet);
+		return;
+	}
+
+	// 8.关闭设备
+	nRet = MV_CC_CloseDevice(handle);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_CloseDevice fail! nRet [%x]\n", nRet);
+		return;
+	}
+
+
+	// 9.销毁句柄
+	nRet = MV_CC_DestroyHandle(handle);
+	if (MV_OK != nRet)
+	{
+		printf("MV_CC_DestroyHandle fail! nRet [%x]\n", nRet);
+	}
+
+	// 释放内存
+	if (pBufForDriver)
+	{
+		free(pBufForDriver);
+		pBufForDriver = NULL;
+	}
+	
+}
+
+HKvct::HKvct()
+{
+
+}
+
+HKvct::~HKvct()
+{
+	vector<CHKCamera*>::iterator it = m_hkcam.begin();
+	for (; it != m_hkcam.end(); ++it)
+	{
+		delete (*it);
+	}
+	m_hkcam.clear();
+}
+
+void HKvct::addHK(int id)
+{
+	if (NULL != getHK(id))
+	{
+		return;
+	}
+	CHKCamera* cam = new CHKCamera();
+	cam->ini(id);
+	m_hkcam.push_back(cam);
+}
+
+void HKvct::delHK(int id)
+{
+	vector<CHKCamera*>::iterator it = m_hkcam.begin();
+	for (; it != m_hkcam.end(); ++it)
+	{
+		if ((*it)->m_id == id)
+		{
+			delete (*it);
+			m_hkcam.erase(it);
+			return ;
+		}
+	}
+}
+
+CHKCamera* HKvct::getHK(int id)
+{
+	vector<CHKCamera*>::iterator it = m_hkcam.begin();
+	for (; it != m_hkcam.end(); ++it)
+	{
+		if ((*it)->m_id == id)
+		{
+			return (*it);
+		}
+	}
+	return NULL;
+}

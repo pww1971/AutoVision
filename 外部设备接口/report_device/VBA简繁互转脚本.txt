@@ -1,0 +1,51 @@
+1\打开你的Excel表，按下ALT+F11，打开Excel的vba编辑器，在左侧工程管理器区域右键插入模块
+
+2\在模块里粘贴文章下面代码，在需要转为简体的地方，用=FtoJ(A1)公式，在需要转为繁体的地方用=JtoF(A1)即可
+
+
+
+Option Explicit
+
+'声明部分:
+
+Private Declare Function LCMapString Lib "kernel32" Alias "LCMapStringA" (ByVal Locale As Long, ByVal dwMapFlags As Long, ByVal lpSrcStr As String, ByVal cchSrc As Long, ByVal lpDestStr As String, ByVal cchDest As Long) As Long
+
+Private Declare Function lstrlen Lib "kernel32" Alias "lstrlenA" (ByVal lpString As String) As Long
+
+'函数部分:
+
+'简转繁
+
+Public Function JtoF(ByVal Str As String) As String
+
+Dim STlen As Long
+
+Dim STf As String
+
+STlen = lstrlen(Str)
+
+STf = Space(STlen)
+
+LCMapString &H804, &H4000000, Str, STlen, STf, STlen
+
+JtoF = STf
+
+End Function
+
+'繁转简
+
+Public Function FtoJ(ByVal Str As String) As String
+
+Dim STlen As Long
+
+Dim STj As String
+
+STlen = lstrlen(Str)
+
+STj = Space(STlen)
+
+LCMapString &H804, &H2000000, Str, STlen, STj, STlen
+
+FtoJ = STj
+
+End Function

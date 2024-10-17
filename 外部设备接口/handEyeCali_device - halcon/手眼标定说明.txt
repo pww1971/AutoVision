@@ -1,0 +1,13 @@
+
+
+标定和阵列的制程是分开的两个部分 阵列形成需要标定的单位像素距离。
+至于不把两个制程和在一起，是因为标定的界面如果使用opencv的roi，无法兼容halcon定位。而且阵列形成原本就应该和标定分开。
+
+arrmovedllcfg 配置文件夹里有几种配置文件
+calihom2d 标定后的放射变换矩阵
+caliobjpt 标定的目标距离和目标数 以及单个像素的毫米距离
+checkParam.cfg checkParam1.cfg model1 region1.hobj 四个文件都是标定的模板定位配置文件
+
+devParam.cfg 阵列形成的图像制程地址。
+
+

@@ -1,0 +1,22 @@
+3dPos_device  3d表面匹配 获取机器手抓取位姿
+auto_design_device 自动建模 实现pww图片处理算法的参数自动设置 就是自动拷贝设置的制程 根据图片处理的结果自动调节亮度对比度色度参数
+COM_device 台达plc通讯的设备
+eyeInHandCali_device 眼在手的九点标定
+get_time_device 定时器 包含飞拍的定时和结果分类
+halcon_deeplearn_device 加载深度学习模型的检测 
+handEyeCali_device 基于opencv的手眼标定
+handEyeCali_device - halcon 基于halcon的手眼标定
+input_MOVE_device  检测io口状态的  根据io状态实现制程跳转或循环
+mutilobj_move_device  多目标定位形成阵列位置 然后做阵列运动 用于物料分拣
+new_move_device 定制检测的例子  
+ngsort_device 分析检测结果实现分类分拣 包含从结果xml中提取ng项目名和指定项目的结果
+report_device 自定义报表  产能统计分析
+Speech_TTS_device 语音播报模块 语音识别模块 注意不要在程序初始化的过程中喊暂停
+dev2devCom_device 演示框架各设备之间通讯的例子 和ngsort_device设备之间的交互 也可以在图像检测模块的算子中进行通讯
+multiPic_Cam_device 单相机多图模式检测
+mosaic_device 图片拼接 包含opencv的模板匹配的硬拼接和 halcon的特征匹配的仿射变换的拼接
+FaceVerify_device 人脸识别认证
+mycheck_device 从检测结果的xml中提取数据的例子
+pdf2Mat_device  pdf文件转图片进行检测的例子 gerber转图片的例子
+cad2design_device dxf文件自动导入形成图像检测制程的例子 从dxf定位到dxf尺寸测量建模，使用uncalib dxf定位和dxf导入尺寸测量，掩膜设计roi修改为dxf文件的大小。
+3D_Gripping_device 深度学习对点云图识别 获取机械手的抓取位姿

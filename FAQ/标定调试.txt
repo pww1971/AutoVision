@@ -1,0 +1,18 @@
+针对标定板选择标定描述文件 caltab_small.descr
+拍照 需要有标定数据  根据标定数据修正图片输出
+点击内参 对inner文件夹里面的图片进行标定
+点击截图后 再点击标定 则拍照后标定 保持图片到inner文件夹 
+保存  保存所有相机的标定结果到配置文件
+
+问题一、halcon error #8404 Minimum threshold while searching for ellipses
+1修改参数：
+标定最大标志点 'max_diam_marks': 要比标定板圆点直径所占的像素值大一点
+标定平滑’ alpha ‘ ， 调整为0.2 试一下，我到这里就能把所有标定板识别出来了，别的参数可以试试调整
+2 增加图片对比度：
+3 增加曝光时间，调整打光
+
+问题二、halcon error #8428 image size does not match the measurement in camera parameters
+重新采集图片进行标定
+
+
+重新初始化相机数量 可以把Cali文件夹里的checkParam*.*全删除

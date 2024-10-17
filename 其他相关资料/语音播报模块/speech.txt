@@ -1,0 +1,22 @@
+上面描述的安装步骤为：
+
+1、卸载之前安装过的任何版本的Speech Platform SDK 库
+
+2、确保已经安装了.net4.0
+
+3、根据你是x86还是x64系统，下载对应系统下的Speech Platform Runtime 11 和Speech Platform SDK 11
+
+4、下载所需语言下的语音识别语言包和tts语言包，因为前两个下载的库里面并不包含运行时的语言包，需要根据需要识别的语言种类或合成的语言种类去下载。
+
+总结：
+
+对于中文语音识别和语音合成，需要下载下面几个安装文件：
+
+SpeechPlatformRuntime_x86.msi            (x86平台下的运行时库)
+
+MicrosoftSpeechPlatformSDK_x86.msi   (x86平台下的sdk库)
+
+
+MSSpeech_SR_zh-CN_TELE.msi  (语音识别中文语言包)
+
+MSSpeech_TTS_zh-CN_HuiHui.msi (语音合成中文语言包)

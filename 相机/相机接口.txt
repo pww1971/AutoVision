@@ -1,0 +1,9 @@
+
+多相机管理系统 根据编号id和名称来识别和拍照
+
+//使用编号id的相机拍照 输出图像m 
+extern "C" PROCLIB_API int CamDLLgrapImage(int id,vector<cv::Mat>& vm);
+//相机释放
+extern "C" PROCLIB_API void CamDLLrelease();
+//相机初始化 完成对各个相机的编号
+extern "C" PROCLIB_API bool CamDLLini();

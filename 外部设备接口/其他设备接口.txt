@@ -1,0 +1,19 @@
+
+非常规设备的开发接口 写1，2，4，5接口即可 
+可以实现激光或机械手臂等设备的控制 如果需要各设备之间的通讯 可以参考定时器的做法
+各外设的通讯如果实时性要求不高可以使用进程通讯 具体看“框架的进程间通讯.txt"
+外部dll一次只能返回ok和ng 两个状态  如果需要多个状态返回 只能添加多个指令每次返回ok和ng 形成二叉树的模式
+
+//设备的使用说明 各指令集的帮助
+1、extern "C" PROCLIB_API string MoveDLLHelp();
+//设备初始化 输入运动管理主系统pmv，运动子模块设备p2
+2、extern "C" PROCLIB_API bool MoveDLLIni(void* pmv,void*& p2);
+//设备停止 可选择写在各指令的执行中
+3、extern "C" PROCLIB_API void MoveDLLStop();
+//设备各指令的执行 
+4、extern "C" PROCLIB_API bool MoveDLLMove(void* pmv,void*& p2,string& data);
+//设备释放内存
+5、extern "C" PROCLIB_API void MoveDllRelease(void*& p2);
+//设备配置文件保存  可选择写在各指令的执行中
+6、extern "C" PROCLIB_API void MoveDllWriteFile();
+

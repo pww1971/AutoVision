@@ -1,0 +1,11 @@
+
+一般只要写三个 克隆可以不写
+但是，clone返回false会进入DesignDLLTreatPicture,这是为了方便无法内存读写初始化就从该函数进行初始化。clone返回ture将不进入
+//图片处理接口 输入src 参数pa 输出位置结果roiRect
+bool DesignDLLTreatPicture(cv::Mat& src,CTpltParam& pa, cv::RotatedRect& roiRect)
+//制程页面时的拷贝 源p的数据拷贝到目标参数pa的p上 可选择的写 记得返回true不进入treat函数
+bool DesignDLLClone(CTpltParam& pa,void*p)
+//动态库的释放
+void DesignDllRelease(CTpltParam& pa)
+//保存制程数据
+void DesignDllWriteFile(CTpltParam& pa)

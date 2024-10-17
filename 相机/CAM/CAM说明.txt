@@ -1,0 +1,10 @@
+宏定义：
+_OPENCV_CAM 海康相机
+_OPENCV_CAM_1 海康主播模式
+_OPENCV_CAM_2 海康分机模式
+_BASLER_CAM 贝斯勒相机
+_SIMULATION 仿真相机
+CALI	相机标定输出 不需要Cali时，将工程的Cali文件夹和checkpatch h和cpp文件移除 保证不使用halcon
+
+没有海康和贝斯勒定义 就是自动采用opencv内部的usb相机打开模式
+有仿真定义 则直接打开图片文件calib_distorted_01.png的模式

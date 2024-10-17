@@ -1,0 +1,36 @@
+计算平面AX+BX+CZ+D = 0。
+先求roi的重心，再求各点和重心的协方差。然后线性最小二乘获取ABCD系数得到平面。
+有了平面就可以计算两平面的角和交线来测量了。
+https://jingyan.baidu.com/article/f79b7cb32a82fd9144023ebb.html
+https://blog.csdn.net/weixin_30448685/article/details/96241168?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_antiscanv2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_antiscanv2&utm_relevant_index=2
+
+第一种方式 根据平面方程计算点到平面的距离
+1.fit_primitives_object_model_3d (ObjectModel3D, ParFitting, ValFitting, FitPlaneObjectModel3DOut)拟合平面基元
+2.获得平面方程参数get_object_model_3d_params (FitPlaneObjectModel3DOut, 'primitive_parameter', PlaneValue)
+        A:=PlaneValue[0]
+        B:=PlaneValue[1]
+        C:= PlaneValue[2]
+        D:= -PlaneValue[3]）
+3.点(x0,y0,z0)到了平面Ax+By+Cz+D=0的距离为：d=|Ax0+By0+Cz0+D|/√(A^2+B^2+C^2)
+
+第二种方式 求点到平面的投影点
+1.projective_trans_point_3d，这个算子可以得到点在平面上投影点坐标（这个投影点坐标是原始坐标系做平面校正后的坐标），
+2.求得投影点坐标后，再用affine_trans_point_3d，将投影点坐标转换为原始坐标系下的坐标，然后点点距离，这样比较麻烦
+
+第三种方式
+1.gen_sphere_object_model_3d_center，以要计算的点生成一个小球体
+2.distance_object_model_3d，计算两个3D Object的距离，这样可能有一点误差，由球体的半径大小决定。
+
+
+点到平面没有算子可用把？ 只有拟合平面的算子
+1.先通过拟合平面得到基准面
+2.获取基准面的法向量和中心参数
+3.计算公式：
+* 计算平面方程(a,b,c,d)
+a := primitive_parameter[0]
+b := primitive_parameter[1]
+c := primitive_parameter[2]
+d := -1*center[0]*a-center[1]*b-center[2]*c
+* 距离计算
+d1 := a*a+b*b+c*c
+height := a*X1+b*Y1+c*Z1+d

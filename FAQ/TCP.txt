@@ -1,0 +1,14 @@
+1、自定义了长度的包头 sizeof(u_int)包头长  防止粘包  
+procLib中搜索 NOUSETCPHEAD 
+TcpConnect.cpp 126 145行 服务器的发送
+TcpConnect.hpp 52行
+tcpRecvBuf.cpp 29行  服务器客户端的接受数据包
+tcpClient.cpp  223 260 291行  客户端的发送
+tcpClient.hpp 55行
+pwwVision.h 13行
+
+
+2、如果是和其他行业通讯 需要去掉这个自定义长度的包头：
+工程c++预处理定义 添加 NOUSETCPHEAD 则不使用自定义的包头  
+重新编译生成另一个名称noTcpHeadProcLib的静态库 
+新建工程，链接输入 附加依赖项 输入noTcpHeadProcLib.lib

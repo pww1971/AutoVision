@@ -1,0 +1,53 @@
+
+最难写的接口   需要根据现场实际情况组合各种运动卡来实现各个接口功能
+保证io口的编号顺序和电机编号顺序与各个运动卡对应不冲突
+一些特殊运动应用接口可以自行添加 然后在其他设备接口中调用dll接口即可
+
+//运动设备的初始化 输入参数loadDlg=1 弹出设置对话框
+extern "C" PROCLIB_API bool MoveDLLini(bool loadDlg);
+//运动设备的配置参数保存读取 比如速度归零等数据 之所以采用cfg 是因为和其他设备参数写在同一个文件中
+extern "C" PROCLIB_API bool MoveDLLwriteMvCfg(CConfig& cfg);
+extern "C" PROCLIB_API bool MoveDLLreadMvCfg(CConfig& cfg);
+//运动设备释放
+extern "C" PROCLIB_API void MoveDLLrelease();
+//所有轴急停
+extern "C" PROCLIB_API void MoveDLLRapidstop();
+//绝对运动 输入轴编号mtid 位置pos
+extern "C" PROCLIB_API bool MoveDLLmoveAbs(int mtid,float pos);
+//相对运动
+extern "C" PROCLIB_API bool MoveDLLmove(int mtid,float dis);
+//连续运动 di正向1 反向-1
+extern "C" PROCLIB_API bool MoveDLLmoveV(int mtid,int di);
+//运动停止 针对连续运动
+extern "C" PROCLIB_API bool MoveDLLmoveStop(int mtid);
+//归零
+extern "C" PROCLIB_API bool MoveDLLmtZero(int mtid);
+//设置io口输出 
+extern "C" PROCLIB_API bool MoveDLLsetIO(int ioid,int onoff);
+//获取输入io口的状态
+extern "C" PROCLIB_API bool MoveDLLgetIO( uint state[]);
+//初始化io口输出低位
+extern "C" PROCLIB_API bool MoveDLLzeroIO();
+//检测电机情况 输出state=0运动中 -1没有运动
+extern "C" PROCLIB_API bool MoveDLLgetMtState(int mtid,int& state);	
+//检测电机位置 输出位置pos
+extern "C" PROCLIB_API bool MoveDLLgetMtPos(int mtid,float& pos);		
+//从设备中 获取当前配置 输出速度归零等变量到vctPa中
+extern "C" PROCLIB_API bool MoveDLLgetParam(vector<string>& vctPa);
+//设置配置到设备中 szPa需要分割解析出速度归零等参数
+extern "C" PROCLIB_API bool MoveDLLsetParam(string szPa);
+//等待电机运行停止 阻塞式
+extern "C" PROCLIB_API void MoveDLLwaitForStop(int mtid);	
+//获取电机当前位置与目的的位置差
+extern "C" PROCLIB_API float MoveDLLgetDvPos(int iaxis);	
+//所有电机归零
+extern "C" PROCLIB_API bool MoveDLLmtReturn();
+//获取运动设备是否正常
+extern "C" PROCLIB_API bool MoveDLLHasIni();
+//获取各电机的运动范围 point.x上限 point.y下限
+extern "C" PROCLIB_API cv::Point2f* MoveDLLgetMvScope();
+//获取电机数
+extern "C" PROCLIB_API int MoveDLLgetmtNum();
+//debug=true 设置各电机的速度为调试速度
+extern "C" PROCLIB_API void MoveDLLsetDebugSpeed(bool debug);
+		

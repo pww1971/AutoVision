@@ -1,0 +1,2 @@
+mfc调用halcon23的算子visualize_object_model_3d 无法显示3d点云 用halcon12的版本没有问题 
+解决办法 在线程里跑

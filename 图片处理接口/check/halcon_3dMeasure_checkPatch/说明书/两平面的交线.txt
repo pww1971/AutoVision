@@ -1,0 +1,89 @@
+//
+	/**
+			计算一条3d空间直线和一个3d空间平面的交点
+			@param            pnv        空间平面的法线的单位矢量
+			@param            pd        空间平面的参数距离,平面的方程为: pnv.dot( pv ) = pd
+			@param            ltv        空间直线的方向(切向)单位矢量
+			@param            lv        空间直线上的一点
+			@param            outV    计算后得到的位于平面上的交点坐标
+
+		*/
+float dotProduct(Point3f lv, Point3f lv2)
+{
+	return lv.x * lv2.x + lv.y * lv2.y + lv.z * lv2.z;
+}
+void planeAndSLIntersectionV(Point3f pnv ,float  pd  , Point3f ltv  , Point3f lv , Point3f& outV )
+{
+	float  dis  = dotProduct(pnv,lv) - pd;
+	//
+	outV.x = ltv.x * 1000 + lv.x;
+	outV.y = ltv.y * 1000 + lv.y;
+	outV.z = ltv.z * 1000 + lv.z;
+
+	float td   = dotProduct(pnv,outV) - pd;
+
+	float k  = dis / (dis - td);
+
+	outV.x -= lv.x;
+	outV.y -= lv.y;
+	outV.z -= lv.z;
+
+	outV.x *= k;
+	outV.y *= k;
+	outV.z *= k;
+
+	outV.x += lv.x;
+	outV.y += lv.y;
+	outV.z += lv.z;
+}
+
+//
+/* *
+		 * 符合右手定则的叉乘: dest = v1 x v2
+		 * @param        dest        叉乘的结果
+		 * @param        v1            叉乘的第一个参数
+		 * @param        v2            叉乘的第二个参数
+		 *  */
+void cross(Point3f& dest, Point3f& v1, Point3f& v2)
+{
+	dest.x = v1.y * v2.z - v1.z * v2.y;
+	dest.y = v1.z * v2.x - v1.x * v2.z;
+	dest.z = v1.x * v2.y - v1.y * v2.x;
+}
+/* *
+* 计算3d空间两个平面相交直线,得到的直线数据为: 直线的切向ltv和直线上的一点lpv
+* @param            panv    空间平面a的法线的单位矢量
+  @param            pad        空间平面a的参数距离,平面的方程为: pnv.dot( pv ) = pd
+  @param            pbnv    空间平面b的法线的单位矢量
+  @param            pbd        空间平面b的参数距离,平面的方程为: pnv.dot( pv ) = pd
+  @param            ltv        两个平面交线的切向
+  @param            lv        两个平面交线上的一点
+*
+*  */
+void pAndPIntersectionLine(Point3f panv , float pad , Point3f pbnv ,float  pbd , Point3f ltv, Point3f lv )
+{
+	//  计算出两条法线的叉积,即为交线的切向
+	cross(ltv, panv, pbnv);
+	cv::Mat m = cv::Mat(1,3,CV_32FC1); 
+	m.at<float>(0, 0) = ltv.x;
+	m.at<float>(0, 1) = ltv.y;
+	m.at<float>(0, 2) = ltv.z;
+	cv::normalize(m,m);
+	ltv.x = m.at<float>(0, 0);
+	ltv.y = m.at<float>(0, 1);
+	ltv.z = m.at<float>(0, 2);
+	// 计算平面a上的一点
+
+	Point3f pav;
+	pav.x = pad * panv.x;
+	pav.y = pad * panv.y;
+	pav.z = pad * panv.z;
+	Point3f tnv;
+	// 计算出在平面a上的,垂直于交线ltv的直线的切向
+	cross(tnv, ltv, panv);
+	// 计算由pav和tnv决定的直线和平面b的交点,这个交点就是两个平面交线上的一点
+	planeAndSLIntersectionV(pbnv, pbd, tnv, pav, lv);
+
+}
+
+// 平面的交线方程 p = t*切向+交点 halcon画个长柱来显示线  切向是旋转位姿 点是平移位姿

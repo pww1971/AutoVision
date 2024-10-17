@@ -1,0 +1,3 @@
+宏定义
+MYSQLTable 使用mysql数据库 否则使用sqlite数据库
+注意和调用exe使用相同定义

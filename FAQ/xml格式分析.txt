@@ -1,0 +1,15 @@
+<POS AnotherName="算法导入" OK="angle 268.5315  value=0.118180">
+    <mask AnotherName="DA" NG="算法导入">
+        <dllcheck AnotherName="算法导入" NG="&lt;POS AnotherName=&quot;算法导入&quot; NG=&quot;&quot;/&gt;
+"/>
+    </mask>
+    <mask AnotherName="WM" NG="图片处理">
+        <pww AnotherName="图片处理" NG="Area= 27565,objNum 1,YES"/>
+        <pww AnotherName="图片处理" NG="Area= 27565,objNum 1,YES"/>
+    </mask>
+</POS>
+
+
+pos标记定位流程
+mask 默认ok  出现ng=说明子流程ng
+子流程 可以嵌套二次制程的流程 在属性ng= 或ok=里面

@@ -1,0 +1,59 @@
+https://blog.csdn.net/V_Gogol/article/details/124203922
+
+
+            HTuple hv_MatrixAID = null, hv_MatrixDID = null, hv_MatrixAInvert = null, hv_MatrixX=null;
+            HTuple value=new HTuple(), hv_ResultValue=new HTuple();
+            ErrStr = "";
+            Point = new List<double>();
+            
+            try
+            {
+                #region 将平面方程数据传入数组-提高可读性
+                a[0] = P1[0]; b[0] = P1[1]; c[0] = P1[2]; d[0] = P1[3];
+                a[1] = P2[0]; b[1] = P2[1]; c[1] = P2[2]; d[1] = P2[3];
+                a[2] = P3[0]; b[2] = P3[1]; c[2] = P3[2]; d[2] = P3[3];
+                #endregion
+                #region 根据克莱姆法则，求解非齐次线性方程组，求出交点
+                /*
+                 AX=D ==> X=(A-1)*D A矩阵的逆乘D矩阵得到X
+                 */
+                //三个平面的法向量矩阵
+                HOperatorSet.CreateMatrix(3, 3, 0, out hv_MatrixAID);
+                HOperatorSet.SetFullMatrix(hv_MatrixAID, new HTuple(a[0]).TupleConcat(b[0]).TupleConcat(
+                    c[0]).TupleConcat(a[1]).TupleConcat(b[1]).TupleConcat(c[1]).TupleConcat(a[2]).TupleConcat(
+                    b[2]).TupleConcat(c[2]));
+                //法向量矩阵行列式的值不能为0，否则方程组没有非0解
+                HOperatorSet.DeterminantMatrix(hv_MatrixAID, "general", out value);
+                if (0 != value.ToDArr()[0])
+                {
+                    //平面方程D矩阵
+                    HOperatorSet.CreateMatrix(3, 1, 0, out hv_MatrixDID);
+                    HOperatorSet.SetFullMatrix(hv_MatrixDID, ((new HTuple(0 - d[0])).TupleConcat(0 - d[1])).TupleConcat(
+                        0 - d[2]));
+                    //求A矩阵的逆
+                    HOperatorSet.InvertMatrix(hv_MatrixAID, "general", 0, out hv_MatrixAInvert);
+                    //计算A-1 *D，求出交点坐标
+                    HOperatorSet.MultMatrix(hv_MatrixAInvert, hv_MatrixDID, "AB", out hv_MatrixX);
+                    //获取结果
+                    HOperatorSet.GetFullMatrix(hv_MatrixX, out hv_ResultValue);
+                    //输出点坐标数组
+                    for (int i = 0; i < 3; i++)
+                        Point.Add(hv_ResultValue.ToDArr()[i]);
+ 
+                    保存矩阵-验证
+                    //HOperatorSet.WriteMatrix(hv_MatrixDID, "binary", "D.mtx");
+                    //HOperatorSet.WriteMatrix(hv_MatrixAID, "binary", "A.mtx");
+                }
+                else
+                {
+                    Log.Info($"输入三平面没有交点");
+                    ret=1;
+                }
+                ret = 0;
+                #endregion
+            }//try
+            catch (Exception e)
+            {
+                ErrStr = e.Message;
+                ret=-1;
+            }

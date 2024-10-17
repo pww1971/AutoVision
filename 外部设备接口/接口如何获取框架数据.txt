@@ -1,0 +1,33 @@
+	CMoveBase* mb = (CMoveBase*)pmv;
+	if (NULL != mb)
+	{
+		//获取调用方的流程id和流程
+		CMoveBase* mbtemp = NULL;
+		int ioid = mb->m_arrMoveId;
+		if (ioid == -1)//主流程
+		{
+			mbtemp = mb->m_mainMB;
+		}
+		else
+		{
+			mbtemp = ((CVisionSystem*)mb->m_mainMB)->m_io.m_ioTrigger[ioid];
+		}
+		//获取调用方阵列
+		CArrayMove& mtc = mbtemp->m_mtc;
+		//获取运动卡
+		CMoveDllType* handle = mbtemp->m_mtc.m_handle;
+		//获取图像检测制程
+		CProcDll* pCheck = mbtemp->m_pCheck;
+		//pCheck->procCheck();
+		//获取当前制程id和当前相机id和拍照显示
+		int procid = pCheck->m_picProcId;
+		int camid = pCheck->m_curCamId;
+		cv::Mat m;
+		pCheck->camPic(camid, m);//拍照
+		pCheck->viewWin(procid, m);//显示
+		//获取报表系统
+		CRPTable* tbReport = mbtemp->m_tbReport;
+		//tbReport->pushMsg();
+		//访问权限
+		((CVisionSystem*)mb->m_mainMB)->m_logMag->m_auth;
+	}
